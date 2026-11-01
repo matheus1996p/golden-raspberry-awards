@@ -1,0 +1,69 @@
+<section class="page-intro">
+  <p class="eyebrow">Arquivo dos prêmios</p>
+  <h1>Quem esperou mais, e quem repetiu o prêmio mais rápido</h1>
+  <p class="lede">
+    O intervalo é calculado entre vitórias consecutivas do mesmo produtor. Quando há empate, todos os produtores aparecem.
+  </p>
+  @if (movieCount() > 0) {
+    <p class="stats">
+      {{ movieCount() }} indicados
+      @if (firstYear() !== null && lastYear() !== null) {
+        <span>entre {{ firstYear() }} e {{ lastYear() }}</span>
+      }
+      <span>{{ winnerCount() }} vencedores</span>
+    </p>
+  }
+</section>
+
+@if (loading()) {
+  <p class="status">Calculando os intervalos...</p>
+} @else if (error()) {
+  <p class="status error" role="alert">{{ error() }}</p>
+} @else if (intervals(); as data) {
+  <div class="interval-grid">
+    <article class="interval-card fast">
+      <header>
+        <p>Mais rápido</p>
+        <h2>Menor intervalo</h2>
+      </header>
+      @if (data.min.length === 0) {
+        <p class="empty">Nenhum produtor ganhou duas vezes.</p>
+      } @else {
+        <ul>
+          @for (item of data.min; track item.producer + item.previousWin) {
+            <li>
+              <strong>{{ item.producer }}</strong>
+              <span class="gap">{{ yearsLabel(item.interval) }}</span>
+              <span class="years">{{ item.previousWin }} → {{ item.followingWin }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </article>
+
+    <article class="interval-card long">
+      <header>
+        <p>Maior espera</p>
+        <h2>Maior intervalo</h2>
+      </header>
+      @if (data.max.length === 0) {
+        <p class="empty">Nenhum produtor ganhou duas vezes.</p>
+      } @else {
+        <ul>
+          @for (item of data.max; track item.producer + item.previousWin) {
+            <li>
+              <strong>{{ item.producer }}</strong>
+              <span class="gap">{{ yearsLabel(item.interval) }}</span>
+              <span class="years">{{ item.previousWin }} → {{ item.followingWin }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </article>
+  </div>
+
+  <p class="footnote">
+    A lista completa de indicados e vencedores está em
+    <a routerLink="/movies">Indicados</a>.
+  </p>
+}

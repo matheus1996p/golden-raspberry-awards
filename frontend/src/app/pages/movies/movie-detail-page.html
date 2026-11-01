@@ -1,0 +1,28 @@
+<a class="back" routerLink="/movies">← Voltar para a lista</a>
+
+@if (loading()) {
+  <p class="status">Carregando o filme...</p>
+} @else if (error()) {
+  <p class="status error" role="alert">{{ error() }}</p>
+} @else if (movie(); as film) {
+  <article class="detail">
+    <p class="eyebrow">{{ film.year }}</p>
+    <h1>{{ film.title }}</h1>
+    @if (film.winner) {
+      <span class="pill win">Vencedor</span>
+    } @else {
+      <span class="pill">Indicado</span>
+    }
+
+    <dl>
+      <div>
+        <dt>Estúdios</dt>
+        <dd>{{ film.studios.length ? film.studios.join(', ') : 'Não informado' }}</dd>
+      </div>
+      <div>
+        <dt>Produtores</dt>
+        <dd>{{ film.producers.length ? film.producers.join(', ') : 'Não informado' }}</dd>
+      </div>
+    </dl>
+  </article>
+}
